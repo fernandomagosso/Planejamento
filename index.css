@@ -1,0 +1,549 @@
+:root {
+  --primary-color: #8a42ff;
+  --secondary-color: #5c25cc;
+  --accent-positive: #4caf50;
+  --accent-negative: #f44336;
+  --background-color: #1a1d21;
+  --card-background: #2a2d32;
+  --text-color: #e0e0e0;
+  --text-light: #a0a0a0;
+  --border-color: #3a3d42;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+.sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header h1 {
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
+.header h1 span {
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+.header p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.card {
+  background-color: var(--card-background);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease-in-out;
+}
+
+.form-card h2 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.form-card > p {
+    margin-bottom: 2rem;
+    color: var(--text-light);
+}
+
+/* --- TABS --- */
+.form-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  padding: 0.75rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s, border-bottom-color 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover {
+  color: var(--text-color);
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  font-weight: 600;
+  border-bottom-color: var(--primary-color);
+}
+
+.form-tab-content {
+    padding-top: 2rem;
+}
+/* --- END TABS --- */
+
+.form-subcategory-card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-subcategory-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+.subcategory-description {
+    color: var(--text-light);
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Dynamic form table styles */
+.category-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.form-tab-content[data-active-tab="debts"] .category-items-list {
+    gap: 1.5rem;
+}
+
+.category-item-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 40px;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.category-item-row.header-row {
+  font-weight: 500;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  padding: 0 0.5rem;
+  margin-bottom: -0.25rem;
+}
+
+.category-item-row input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-background); /* Darker than sub-card bg */
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.category-item-row input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(138, 66, 255, 0.25);
+}
+
+.btn-remove-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-remove-item:hover:not(:disabled) {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--accent-negative);
+}
+
+.btn-remove-item:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.category-controls {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+}
+
+.btn-add-item {
+  background: transparent;
+  border: none;
+  color: var(--primary-color);
+  padding: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-add-item:hover {
+  color: var(--text-color);
+}
+/* End dynamic form styles */
+
+
+/* Debt Card Styles */
+.debt-item-card {
+    position: relative;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem 1.5rem 1.5rem; /* More top padding for button */
+}
+.debt-item-card > .btn-remove-item {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 10;
+}
+.debt-item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.debt-item-grid .description-group {
+    grid-column: 1 / -1;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.form-group label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+.form-group input {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(138, 66, 255, 0.25);
+}
+.form-group input:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+}
+
+/* End Debt Card Styles */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.btn {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 300px;
+}
+
+.loader {
+  border: 6px solid #333;
+  border-top: 6px solid var(--primary-color);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.summary-grid-sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.summary-item {
+  padding: 1.5rem;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.summary-item p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
+}
+.summary-item .amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.positive { color: var(--accent-positive); }
+.negative { color: var(--accent-negative); }
+
+.ai-response h3 {
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+    border-bottom: none;
+    display: block;
+}
+.ai-response ul {
+    list-style-position: inside;
+    padding-left: 0.5rem;
+}
+.ai-response li {
+    margin-bottom: 0.5rem;
+}
+.ai-response p:first-of-type {
+    margin-top: 0;
+}
+
+.dashboard-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+
+.chart-container {
+  margin-bottom: 1.5rem;
+}
+
+/* Auth Styles */
+.auth-controls {
+    display: flex;
+    align-items: center;
+}
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--card-background);
+    padding: 0.5rem 1rem;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+}
+.user-profile img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+.user-profile span {
+    font-weight: 500;
+}
+.user-profile .btn-secondary {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.btn-google {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-google:hover:not(:disabled) {
+    background-color: #f5f5f5;
+}
+.btn-google:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.save-drive-status {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--accent-positive);
+}
+.save-drive-status a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+.save-drive-status a:hover {
+    text-decoration: underline;
+}
+
+/* Recharts Dark Theme Styles */
+.recharts-cartesian-axis-line {
+  stroke: var(--border-color);
+}
+.recharts-cartesian-axis-tick-value tspan {
+  fill: var(--text-light);
+}
+.recharts-tooltip-label {
+  color: var(--text-color);
+}
+
+@media (max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        position: static;
+    }
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  #root {
+    padding: 1rem;
+  }
+  .card {
+    padding: 1.5rem;
+  }
+  .category-item-row {
+    grid-template-columns: 1.5fr 1fr 36px;
+  }
+  .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
