@@ -147,24 +147,21 @@ const App: React.FC = () => {
     }, [isGapiClientReady]);
 
     const handleAnalyze = async () => {
-        let currentApiKey = apiKey;
-        if (!currentApiKey) {
+        let keyToUse = apiKey;
+        if (!keyToUse) {
             const userInput = window.prompt("Por favor, insira sua chave da API do Google GenAI:", "");
-            if (userInput) {
-                setApiKey(userInput);
-                localStorage.setItem('geminiApiKey', userInput);
-                currentApiKey = userInput;
-            } else {
-                return; // User cancelled
+            if (!userInput) {
+                return; // User cancelled or entered nothing
             }
+            setApiKey(userInput);
+            localStorage.setItem('geminiApiKey', userInput);
+            keyToUse = userInput;
         }
-        
-        if (!currentApiKey) return;
 
         setIsLoading(true);
         setDriveFileLink(null);
         setAnalyzedData(financialData);
-        const response = await analyzeFinancials(financialData, currentApiKey);
+        const response = await analyzeFinancials(financialData, keyToUse);
         setAiResponse(response);
         setView('dashboard');
         setIsLoading(false);
