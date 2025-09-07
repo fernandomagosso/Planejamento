@@ -147,6 +147,11 @@ const App: React.FC = () => {
     }, [isGapiClientReady]);
 
     const handleAnalyze = async () => {
+        // Ação do botão "Analisar" desabilitada para fins de teste.
+        console.log('A função de análise está desabilitada temporariamente.');
+        alert('A função de análise está desabilitada temporariamente para testes.');
+        
+        /* --- Original implementation below ---
         let keyToUse = apiKey;
         if (!keyToUse) {
             const userInput = window.prompt("Por favor, insira sua chave da API do Google GenAI:", "");
@@ -165,6 +170,7 @@ const App: React.FC = () => {
         setAiResponse(response);
         setView('dashboard');
         setIsLoading(false);
+        */
     };
 
     const handleEdit = () => {
