@@ -2,9 +2,13 @@ import { GoogleGenAI } from '@google/genai';
 import type { FinancialData, FinancialDataItem, DebtItem } from '../types';
 import { formatCurrency } from '../utils/formatters';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+export const analyzeFinancials = async (data: FinancialData, apiKey: string): Promise<string> => {
+  if (!apiKey) {
+    return "### Erro na Análise\n\nA chave da API do Google GenAI não foi fornecida.";
+  }
 
-export const analyzeFinancials = async (data: FinancialData): Promise<string> => {
+  const ai = new GoogleGenAI({ apiKey });
+
   const formatItems = (items: FinancialDataItem[]) => items
     .filter(item => item.amount > 0)
     .map(item => `- ${item.description || '(Não especificado)'}: ${formatCurrency(item.amount)}`)
