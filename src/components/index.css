@@ -524,6 +524,28 @@ input[type=number] {
   color: var(--text-color);
 }
 
+/* Drive Actions Styles */
+.drive-actions-container {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+.drive-status-text {
+    color: var(--text-light);
+}
+.btn-load-drive {
+    width: auto;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+
 @media (max-width: 900px) {
     .main-layout {
         grid-template-columns: 1fr;

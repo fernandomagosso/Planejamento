@@ -5,7 +5,10 @@ export const FinancialForm: React.FC<{
   data: FinancialData;
   setData: React.Dispatch<React.SetStateAction<FinancialData>>;
   onAnalyze: () => void;
-}> = ({ data, setData, onAnalyze }) => {
+  onLoadFromDrive: () => void;
+  isLoadAvailable: boolean;
+  isFindingFile: boolean;
+}> = ({ data, setData, onAnalyze, onLoadFromDrive, isLoadAvailable, isFindingFile }) => {
   const [activeTab, setActiveTab] = useState<'income' | 'expenses' | 'debts' | 'forecast'>('income');
 
   const handleItemChange = (category: 'income' | 'expenses' | 'debts', id: number, field: keyof FinancialDataItem | keyof DebtItem, value: string | number) => {
@@ -129,6 +132,20 @@ export const FinancialForm: React.FC<{
     <div className="card form-card">
       <h2>Vamos começar!</h2>
       <p>Preencha os campos abaixo com seus valores mensais para que nossa IA possa te ajudar.</p>
+      
+      {(isFindingFile || isLoadAvailable) && (
+        <div className="drive-actions-container">
+            {isFindingFile ? (
+                <p className="drive-status-text">Buscando dados no Google Drive...</p>
+            ) : isLoadAvailable && (
+                <button type="button" onClick={onLoadFromDrive} className="btn-secondary btn-load-drive">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Carregar dados salvos do Drive
+                </button>
+            )}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="form-tabs" role="tablist">
             {TABS.map(tab => ( <button key={tab.key} type="button" role="tab" aria-selected={activeTab === tab.key} className={`tab-button ${activeTab === tab.key ? 'active' : ''}`} onClick={() => setActiveTab(tab.key as any)}>{tab.label}</button>))}
