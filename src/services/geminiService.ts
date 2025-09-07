@@ -3,6 +3,24 @@ import type { FinancialData, FinancialDataItem, DebtItem } from '../types';
 import { formatCurrency } from '../utils/formatters';
 
 export const analyzeFinancials = async (data: FinancialData, apiKey: string): Promise<string> => {
+  // AI analysis is temporarily disabled to test Google Login and Drive integration.
+  console.log("AI analysis is temporarily disabled for testing purposes.");
+  
+  const mockResponse = `
+  ### Panorama Geral
+  A análise de IA está temporariamente desabilitada para testes. Esta é uma resposta simulada para que a funcionalidade de login e salvamento no Google Drive possa ser verificada.
+
+  ### Pontos de Atenção
+  - Verifique se o login com o Google funciona corretamente.
+  - Tente salvar estes dados de teste na planilha do Google Drive.
+
+  ### Recomendações Práticas
+  - Se o login e o salvamento funcionarem, a integração com o Google está correta. O próximo passo será reativar a conexão com a IA.
+  `;
+  
+  return Promise.resolve(mockResponse);
+
+  /* --- Original implementation below ---
   if (!apiKey) {
     return "### Erro na Análise\n\nA chave da API do Google GenAI não foi fornecida.";
   }
@@ -103,4 +121,5 @@ export const analyzeFinancials = async (data: FinancialData, apiKey: string): Pr
     }
     return "### Erro na Análise\n\nDesculpe, ocorreu um erro inesperado ao comunicar com a IA. Por favor, tente novamente mais tarde.";
   }
+  */
 };
