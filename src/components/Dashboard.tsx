@@ -5,7 +5,12 @@ import type { FinancialData } from '../types';
 import { formatCurrency } from '../utils/formatters';
 
 export const AiDiagnosis: React.FC<{ aiResponse: string; }> = ({ aiResponse }) => {
-    const parsedAiResponse = useMemo(() => ({ __html: marked.parse(aiResponse) as string }), [aiResponse]);
+    const parsedAiResponse = useMemo(() => {
+        if (typeof aiResponse === 'string' && aiResponse.trim() !== '') {
+            return { __html: marked.parse(aiResponse) as string };
+        }
+        return { __html: '<h3>Erro na Análise</h3><p>Não foi possível gerar o diagnóstico. Por favor, verifique os dados e tente novamente.</p>' };
+    }, [aiResponse]);
     return (
         <div className="card dashboard-card">
             <h3>Diagnóstico da IA</h3>
@@ -17,10 +22,13 @@ export const AiDiagnosis: React.FC<{ aiResponse: string; }> = ({ aiResponse }) =
 export const IncomeForecastChart: React.FC<{ data: FinancialData }> = ({ data }) => {
     const { incomeForecast, income } = data;
     const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
-    const monthlyGrowthRate = Math.pow(1 + incomeForecast.growthRate / 100, 1 / 12) - 1;
 
     const forecastData = useMemo(() => {
-        if (incomeForecast.monthsToForecast <= 0 || totalIncome <= 0 || incomeForecast.growthRate <= 0) {
+        const annualGrowthFactor = 1 + (incomeForecast.growthRate || 0) / 100;
+        // Prevent NaN from Math.pow on negative numbers
+        const monthlyGrowthRate = annualGrowthFactor > 0 ? Math.pow(annualGrowthFactor, 1 / 12) - 1 : 0;
+
+        if (incomeForecast.monthsToForecast <= 0 || totalIncome <= 0) {
             return [];
         }
 
@@ -35,7 +43,7 @@ export const IncomeForecastChart: React.FC<{ data: FinancialData }> = ({ data })
                 "Renda Projetada": projectedIncome,
             };
         });
-    }, [totalIncome, incomeForecast, monthlyGrowthRate]);
+    }, [totalIncome, incomeForecast]);
 
     if (forecastData.length === 0) return null;
 
