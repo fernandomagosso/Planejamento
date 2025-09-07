@@ -8,7 +8,7 @@ import type { FinancialData, UserProfile } from './types';
 import './components/index.css';
 
 // Define constants outside the component to avoid re-declarations and simplify dependency arrays
-const GOOGLE_CLIENT_ID = '312225788265-5akif4pd2ebspjuui79m6qe1807an145.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '312225788265-3irj8u3hpc3o7bc3pmg9vl8ach6upfgf.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 const App: React.FC = () => {
