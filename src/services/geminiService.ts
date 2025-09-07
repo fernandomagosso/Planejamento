@@ -73,14 +73,25 @@ export const analyzeFinancials = async (data: FinancialData): Promise<string> =>
         },
     });
 
-    if (response && response.candidates && response.candidates.length > 0) {
-        return response.text;
-    } else {
-        const blockReason = response?.promptFeedback?.blockReason || 'desconhecido';
-        const blockMessage = response?.promptFeedback?.blockReasonMessage ? `(${response.promptFeedback.blockReasonMessage})` : '';
-        console.error(`Gemini API returned an empty or blocked response. Reason: ${blockReason} ${blockMessage}`);
-        return `### Erro na Análise\n\nDesculpe, a IA não conseguiu gerar uma resposta. A solicitação pode ter sido bloqueada.\n\n**Motivo:** ${blockReason} ${blockMessage}\n\nPor favor, revise os dados inseridos e tente novamente.`;
+    const text = response.text;
+    if (text) {
+        return text;
     }
+
+    // If text is empty, it might be due to a block or other reason
+    const blockReason = response?.promptFeedback?.blockReason || 'desconhecido';
+    const blockMessage = response?.promptFeedback?.blockReasonMessage ? `(${response.promptFeedback.blockReasonMessage})` : '';
+    console.error(`Gemini API returned an empty or blocked response. Reason: ${blockReason} ${blockMessage}`);
+
+    // FIX: Cast blockReason to a string to fix a TypeScript type comparison error.
+    // The Gemini API returns a string-based enum for the block reason, and casting it
+    // ensures the comparison with the string literal is valid.
+    if (blockReason !== 'desconhecido' && String(blockReason) !== 'BLOCK_REASON_UNSPECIFIED') {
+        return `### Erro na Análise\n\nDesculpe, a IA não conseguiu gerar uma resposta. A solicitação foi bloqueada.\n\n**Motivo:** ${blockReason} ${blockMessage}\n\nPor favor, revise os dados inseridos e tente novamente.`;
+    }
+
+    return `### Erro na Análise\n\nDesculpe, a IA retornou uma resposta vazia. Isso pode acontecer por diversos motivos. Por favor, tente ajustar os valores ou tente novamente.`;
+
   } catch (error) {
     console.error("Error calling Gemini API:", error);
     if (error instanceof Error) {
