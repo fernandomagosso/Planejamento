@@ -23,7 +23,6 @@ const App: React.FC = () => {
     const [analyzedData, setAnalyzedData] = useState<FinancialData | null>(null);
     const [aiResponse, setAiResponse] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [apiKey, setApiKey] = useState<string | null>(null);
 
     // Google Auth State
     const [isAuthReady, setIsAuthReady] = useState(false);
@@ -32,13 +31,6 @@ const App: React.FC = () => {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [driveFileLink, setDriveFileLink] = useState<string|null>(null);
-
-    useEffect(() => {
-        const savedKey = localStorage.getItem('geminiApiKey');
-        if (savedKey) {
-            setApiKey(savedKey);
-        }
-    }, []);
 
     const handleSignOut = useCallback(() => {
         setIsAuthLoading(true);
@@ -123,16 +115,12 @@ const App: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const initializeGapiClient = useCallback(async (key: string) => {
+    const initializeGapiClient = useCallback(async () => {
         if (isGapiClientReady) return true;
-        if (!key) {
-            console.error("API Key not provided for GAPI client initialization.");
-            return false;
-        }
         try {
              await new Promise<void>((resolve, reject) => {
                 (window as any).gapi.load('client', () => {
-                    (window as any).gapi.client.init({ apiKey: key })
+                    (window as any).gapi.client.init({})
                         .then(() => (window as any).gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4'))
                         .then(resolve)
                         .catch(reject);
@@ -147,30 +135,13 @@ const App: React.FC = () => {
     }, [isGapiClientReady]);
 
     const handleAnalyze = async () => {
-        // Ação do botão "Analisar" desabilitada para fins de teste.
-        console.log('A função de análise está desabilitada temporariamente.');
-        alert('A função de análise está desabilitada temporariamente para testes.');
-        
-        /* --- Original implementation below ---
-        let keyToUse = apiKey;
-        if (!keyToUse) {
-            const userInput = window.prompt("Por favor, insira sua chave da API do Google GenAI:", "");
-            if (!userInput) {
-                return; // User cancelled or entered nothing
-            }
-            setApiKey(userInput);
-            localStorage.setItem('geminiApiKey', userInput);
-            keyToUse = userInput;
-        }
-
         setIsLoading(true);
         setDriveFileLink(null);
         setAnalyzedData(financialData);
-        const response = await analyzeFinancials(financialData, keyToUse);
+        const response = await analyzeFinancials(financialData);
         setAiResponse(response);
         setView('dashboard');
         setIsLoading(false);
-        */
     };
 
     const handleEdit = () => {
@@ -182,14 +153,11 @@ const App: React.FC = () => {
 
     const handleSaveToDrive = async () => {
         if (!analyzedData || !userProfile) return;
-        if (!apiKey) {
-            alert("A chave da API não foi configurada. Por favor, retorne e analise novamente para configurar a chave.");
-            return;
-        }
+
         setIsSaving(true);
         setDriveFileLink(null);
         
-        const gapiReady = await initializeGapiClient(apiKey);
+        const gapiReady = await initializeGapiClient();
         if (!gapiReady) {
             console.error("Google Sheets API client could not be initialized.");
             setIsSaving(false);
