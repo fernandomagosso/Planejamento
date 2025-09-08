@@ -1,6 +1,6 @@
 // Fix: Implementing Gemini service based on provided guidelines.
 import { GoogleGenAI, Type } from "@google/genai";
-import { FinancialData, AnalysisResult } from "../types";
+import { FinancialData, AnalysisResult, InsightResult, GroundingChunk } from "../types";
 
 // As per guidelines, initialize with a named apiKey parameter from process.env.API_KEY.
 // The API key is assumed to be pre-configured and accessible.
@@ -67,4 +67,33 @@ export const getFinancialAnalysis = async (data: FinancialData): Promise<Analysi
     }
     throw new Error("An unknown error occurred while fetching financial analysis.");
   }
+};
+
+// New function for fetching financial insights with search grounding
+export const getFinancialInsights = async (topic: string): Promise<InsightResult> => {
+    try {
+        const prompt = `Provide a concise overview and key tips about "${topic}" for someone new to personal finance.`;
+
+        // As per guidelines, use ai.models.generateContent with googleSearch tool.
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                tools: [{ googleSearch: {} }],
+            },
+        });
+
+        const text = response.text;
+        // As per guidelines, extract URLs from groundingChunks.
+        const sources: GroundingChunk[] = response.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+
+        return { text, sources };
+
+    } catch (error) {
+        console.error("Error getting financial insights from Gemini API:", error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to get financial insights: ${error.message}`);
+        }
+        throw new Error("An unknown error occurred while fetching financial insights.");
+    }
 };
